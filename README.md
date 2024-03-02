@@ -11,13 +11,16 @@ The purpose of these technologies listed below are largely because they're langu
 **Tauri**
   * A Rust framework for developing faux-desktop applications running on a computer's default web engine.
 
-**Artix**
-  * A Rust library for quickly developing fast APIs. Will be needed for the Showdown functionality that is listed as one of the roadmapped feautres.
+**Actix Web**
+  * A Rust library for quickly developing fast APIs. Will be needed for the Showdown functionality that is listed as one of the roadmapped feautres, as well as log in/register functionality.
 
 ### Database
-**PostgreSQL**
+**MySQL**
   * An iteration on the very common SQL database modeling language. Will be used for storing Ami stats, as well as user's Renown (in-game point system), and various other data that will need to be stored.
 
 ### Frontend
 **React**
   * React surely needs no introduction, but I mainly chose it since I have experience building user interfaces with it and I believe it'll speed up the development.
+
+  **Three.js** (Still Unsure)
+   * May be used to draw and animate polygons on the screen.
