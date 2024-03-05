@@ -1,0 +1,22 @@
+div.banner-container {
+    --container-height: 170px;
+    position: relative;
+    background-color: var(--secondary-color);
+    width: 100%;
+    height: var(--container-height);
+}
+
+h2.banner-text {
+    position: absolute;
+    top: calc(calc(var(--container-height)/2) - var(--header-font-size));
+    padding-left: 25px;
+    font-size: var(--header-font-size);
+}
+
+.ami {
+    color: var(--text-color); /* Font color for 'Ami' */
+}
+
+.studio {
+    color: var(--accent-color); /* Font color for 'Studio' */
+}

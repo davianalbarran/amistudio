@@ -1,0 +1,19 @@
+.textbox-container {
+    margin: 0 auto; /* Centers the textbox horizontally */
+    width: 650px; /* Adjust width as needed */
+    text-align: center; /* Centers the text inside the textbox */
+    height: 60px;
+}
+
+.textbox-input {
+    display: block; /* Makes the input element block-level */
+    width: 100%; /* Fills the width of the container */
+    padding: 10px;
+    margin-bottom: 10px; /* Adds space between textboxes */
+    border: 1px solid #ccc; /* Border color */
+    border-radius: 5px; /* Rounded corners */
+    box-sizing: border-box; /* Ensures padding and border are included in the width */
+    background-color: var(--secondary-color); /* Background color */
+    color: var(--text-color); /* Text color */
+    font-size: 20px;
+}

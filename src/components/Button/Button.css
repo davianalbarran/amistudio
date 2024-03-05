@@ -1,0 +1,13 @@
+.custom-button {
+    display: block; /* Makes the button block-level */
+    width: 160px; /* Adjust width as needed */
+    height: 55px;
+    margin: 0 auto; /* Centers the button horizontally */
+    padding: 10px 20px; /* Adjust padding as needed */
+    border: none; /* Removes the default border */
+    border-radius: 5px; /* Rounded corners */
+    background-color: var(--primary-color); /* Background color */
+    color: var(--text-color);
+    font-size: 20px;
+    cursor: pointer; /* Changes cursor to pointer on hover */
+}

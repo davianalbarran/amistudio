@@ -1,0 +1,8 @@
+.header-container {
+    text-align: center; /* Centers the text */
+    margin-bottom: 20px; /* Adds space below the header */
+}
+
+.header-text {
+    font-size: var(--header-font-size);
+}
