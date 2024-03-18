@@ -1,0 +1,9 @@
+.gender-preference label {
+  color: var(--text-color);
+}
+
+.gender-preference select {
+  background-color: var(--secondary-color);
+  color: var(--text);
+  border: 1px solid var(--accent-color);
+}

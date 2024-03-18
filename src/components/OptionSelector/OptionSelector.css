@@ -1,0 +1,14 @@
+.option-selector h3 {
+  color: var(--primary-color);
+}
+
+.option-selector button {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  border: 1px solid var(--accent-color);
+}
+
+.option-selector button:hover {
+  background-color: var(--accent-color);
+  color: var(--secondary-color);
+}

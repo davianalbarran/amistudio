@@ -1,0 +1,12 @@
+.ami-display {
+  background-color: var(--secondary-color);
+  border: 1px solid var(--accent-color);
+}
+
+.ami-display h3 {
+  color: var(--primary-color);
+}
+
+.ami-display p {
+  color: var(--text-color);
+}

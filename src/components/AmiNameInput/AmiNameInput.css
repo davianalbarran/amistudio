@@ -1,0 +1,9 @@
+.ami-name-input label {
+  color: var(--text);
+}
+
+.ami-name-input input {
+  background-color: var(--secondary-color);
+  color: var(--text);
+  border: 1px solid var(--accent-color);
+}

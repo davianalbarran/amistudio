@@ -1,0 +1,12 @@
+.stats-display {
+  background-color: var(--secondary-color);
+  border: 1px solid var(--accent-color);
+}
+
+.stats-display h4 {
+  color: var(--primary-color);
+}
+
+.stats-display p {
+  color: var(--text-color);
+}

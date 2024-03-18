@@ -1,7 +1,16 @@
 import './Button.css';
 
-export default function Button(props: { buttonText: string, type: "submit" | "reset" | "button" | undefined }) {
-    return (
-        <button className="custom-button" type={props.type} >{ props.buttonText } </button>
-    );
+interface ButtonProps {
+  buttonText: string;
+  type?: 'submit' | 'reset' | 'button';
+  disabled?: boolean;
+  onClick?: () => void;
+}
+
+export default function Button({ buttonText, type = 'button', disabled = false, onClick }: ButtonProps) {
+  return (
+    <button className="custom-button" type={type} disabled={disabled} onClick={onClick}>
+      {buttonText}
+    </button>
+  );
 }

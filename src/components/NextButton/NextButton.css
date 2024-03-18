@@ -1,0 +1,9 @@
+.next-button {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border: none;
+}
+
+.next-button:hover {
+  background-color: var(--accent-color);
+}

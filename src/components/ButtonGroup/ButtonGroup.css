@@ -1,0 +1,16 @@
+.button-group button {
+  background-color: var(--secondary-color);
+  color: var(--text);
+  border: 1px solid var(--accent-color);
+}
+
+.button-group button:hover {
+  background-color: var(--accent-color);
+  color: var(--secondary-color);
+}
+
+.button-group select {
+  background-color: var(--secondary-color);
+  color: var(--text);
+  border: 1px solid var(--accent-color);
+}
