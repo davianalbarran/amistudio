@@ -91,20 +91,13 @@ async fn create_ami(user_id: i32, name: &str, gender: &str, sprite_path: &str) -
     let database_url = env::var("DATABASE_URL").ok().unwrap();
     let pool = MySqlPool::connect(&database_url).await?;
 
-    let default_str_stat = 1;
-    let default_int_stat = 1;
-    let default_end_stat = 1;
-
     query!(
-        "INSERT INTO Amis (user_id, name, gender, sprite_path, str_stat, int_stat, end_stat)
-         VALUES (?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO Amis (user_id, name, gender, sprite_path)
+         VALUES (?, ?, ?, ?)",
         user_id,
         name,
         gender,
-        sprite_path,
-        default_str_stat,
-        default_int_stat,
-        default_end_stat
+        sprite_path
     )
     .execute(&pool)
     .await?;
@@ -112,9 +105,47 @@ async fn create_ami(user_id: i32, name: &str, gender: &str, sprite_path: &str) -
     Ok(())
 }
 
+#[tauri::command]
+async fn register_user(email: &str, username: &str, password: &str) -> Result<(), DBError> {
+    dotenv().ok();
+    let database_url = env::var("DATABASE_URL").ok().unwrap();
+    let pool = MySqlPool::connect(&database_url).await?;
+
+    // Begin a transaction
+    let mut transaction = pool.begin().await?;
+
+    // Insert the user into the Users table
+    let result = query!(
+        "INSERT INTO Users
+         VALUES ()"
+    )
+    .fetch_optional(&mut transaction)
+    .await?;
+
+    // Get the last inserted user ID
+    let user_id = result.unwrap().last_insert_id();
+
+    // Insert the credentials into the Credentials table with the user ID as the foreign key
+    query!(
+        "INSERT INTO Credentials (user_id, email, username, password)
+         VALUES (?, ?, ?, SHA2(?, 224))",
+        user_id,
+        email,
+        username,
+        password
+    )
+    .fetch_optional(&mut transaction)
+    .await?;
+
+    // Commit the transaction
+    transaction.commit().await?;
+
+    Ok(())
+}
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![validate_login, check_ami, create_ami])
+        .invoke_handler(tauri::generate_handler![validate_login, check_ami, create_ami, register_user])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

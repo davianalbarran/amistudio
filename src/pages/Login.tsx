@@ -4,7 +4,7 @@ import PageHeader from "../components/PageHeader/PageHeader";
 import Button from "../components/Button/Button";
 import Error from "../components/Error/Error";
 import { invoke } from "@tauri-apps/api/tauri";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 export default function Login() {
@@ -52,14 +52,13 @@ export default function Login() {
             <Banner />
             <PageHeader text="Log In" />
             <form onSubmit={handleSubmit}>
-                <Textbox text="Enter your username..." onBlur={handleUsernameChange} />
-                <Textbox text="Enter your password..." onBlur={handlePasswordChange} isPassword />
-                <Button type="submit" buttonText="Log In" disabled={isSubmitting} />
+            <Textbox text="Enter your username..." onBlur={handleUsernameChange} />
+            <Textbox text="Enter your password..." onBlur={handlePasswordChange} isPassword />
+            <Button type="submit" buttonText="Log In" disabled={isSubmitting} />
             </form>
-            { error ?
-                <Error text="There was an error validating with the given credentials!" />
-                : <></>
-            }
+            {error && <Error text="There was an error validating with the given credentials!" />}
+            <p>Want to join the party?</p>
+            <Link to="/Registration">Register Now</Link>
         </>
-        );
+    );
 }

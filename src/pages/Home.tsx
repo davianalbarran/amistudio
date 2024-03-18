@@ -6,7 +6,7 @@ import AmiDisplay from '../components/AmiDisplay/AmiDisplay';
 import StatsDisplay from '../components/StatsDisplay/StatsDisplay';
 import ButtonGroup from '../components/ButtonGroup/ButtonGroup';
 
-export interface HomeProps {
+interface HomeProps {
   amiData: {
     name: string;
     gender: string;
