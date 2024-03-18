@@ -68,9 +68,10 @@ const Home: React.FC = () => {
         } catch (error) {
             console.error('Error checking Ami:', error);
         }
-}
-setIsLoading(false);
-};
+    }
+
+        setIsLoading(false);
+    };
 
   checkAmi();
 }, [location.state, navigate]);

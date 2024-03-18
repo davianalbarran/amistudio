@@ -119,11 +119,11 @@ async fn register_user(email: &str, username: &str, password: &str) -> Result<()
         "INSERT INTO Users
          VALUES ()"
     )
-    .fetch_optional(&mut transaction)
+    .execute(&mut *transaction)
     .await?;
 
     // Get the last inserted user ID
-    let user_id = result.unwrap().last_insert_id();
+    let user_id = result.last_insert_id();
 
     // Insert the credentials into the Credentials table with the user ID as the foreign key
     query!(
@@ -134,7 +134,7 @@ async fn register_user(email: &str, username: &str, password: &str) -> Result<()
         username,
         password
     )
-    .fetch_optional(&mut transaction)
+    .execute(&mut *transaction)
     .await?;
 
     // Commit the transaction
@@ -143,9 +143,33 @@ async fn register_user(email: &str, username: &str, password: &str) -> Result<()
     Ok(())
 }
 
+#[tauri::command]
+async fn change_status(status: &str, user_id: i32) -> Result<(), DBError> {
+    dotenv().ok();
+
+    let database_url = env::var("DATABASE_URL").ok().unwrap();
+    let pool = MySqlPool::connect(&database_url).await?;
+
+    let allowed_statuses = ["ONLINE", "OFFLINE", "IN MATCH"];
+
+    if !allowed_statuses.contains(&status) {
+        return Err(DBError { err: "Invalid status value".to_string() });
+    }
+
+    query!(
+        "UPDATE Users SET STATUS = ? WHERE user_id = ?",
+        status,
+        user_id
+    )
+    .execute(&pool)
+    .await?;
+
+    Ok(())
+}
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![validate_login, check_ami, create_ami, register_user])
+        .invoke_handler(tauri::generate_handler![validate_login, check_ami, create_ami, register_user, change_status])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

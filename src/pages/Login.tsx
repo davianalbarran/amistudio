@@ -26,25 +26,36 @@ export default function Login() {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-
         if (error) setError(false);
+        setIsSubmitting(true);
 
         try {
-            const response = await invoke('validate_login', { username, password });
-            const { user_id } = response as { user_id: number | null };
+            const response: any = await invoke("validate_login", { username, password });
+            const userId = response.user_id as number | undefined;
+            console.log(userId);
 
-            if (user_id) {
-                navigate("/Home", { state: { userId: user_id } });
+            if (userId) {
+                // Update user status to "ONLINE" on successful login
+                await invoke("change_status", { userId, status: "ONLINE" });
+
+                const hasAmi: boolean = await invoke("check_ami", { userId });
+                console.log(hasAmi);
+
+                if (!hasAmi) {
+                    navigate("/AmiCreation", { state: { userId } });
+                } else {
+                    navigate("/Home", { state: { userId } });
+                }
             } else {
                 setError(true);
-                setIsSubmitting(false);
             }
         } catch (error) {
             console.error(error);
             setError(true);
-            setIsSubmitting(false);
         }
-    }
+
+        setIsSubmitting(false);
+    };
 
 
     return (
