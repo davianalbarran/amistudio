@@ -5,6 +5,7 @@ import Banner from '../components/Banner/Banner';
 import AmiDisplay from '../components/AmiDisplay/AmiDisplay';
 import StatsDisplay from '../components/StatsDisplay/StatsDisplay';
 import ButtonGroup from '../components/ButtonGroup/ButtonGroup';
+import Button from '../components/Button/Button';
 
 interface HomeProps {
   amiData: {
@@ -77,15 +78,43 @@ const Home: React.FC = () => {
 }, [location.state, navigate]);
 
   const handleShowdowns = () => {
-    // Handle showdowns button click
+      const userId = location.state?.userId;
+
+      navigate("/Showdowns", { state: { userId }});
   };
 
   const handleSettings = () => {
     // Handle settings button click
   };
 
-  const handleAction = (action: string) => {
-    // Handle selected action
+  const handleAction = async (action: string) => {
+    const userId = location.state?.userId;
+    switch (action) {
+      case 'Read book':
+        await invoke("increment_stat", { userId, statType: "INT" });
+        break;
+      case 'Go to gym':
+        await invoke("increment_stat", { userId, statType: "STR" });
+        break;
+      case 'Go for a run':
+        await invoke("increment_stat", { userId, statType: "END" });
+        break;
+      default:
+        break;
+    }
+
+    // set some state so the screen is rerendered.
+  };
+
+  const handleLogout = async () => {
+    const userId = location.state?.userId;
+    await invoke("logout", { userId });
+    navigate("/");
+  };
+
+  const handleFriendsClick = () => {
+    const userId = location.state?.userId;
+    navigate("/Friends", { state: { userId } });
   };
 
   if (isLoading) {
@@ -95,6 +124,8 @@ const Home: React.FC = () => {
   return (
     <>
       <Banner />
+      <Button onClick={handleLogout} buttonText="Logout" />
+      <Button onClick={handleFriendsClick} buttonText="Friends" />
       <AmiDisplay amiData={amiData} />
       <StatsDisplay stats={stats} />
       <ButtonGroup onShowdowns={handleShowdowns} onSettings={handleSettings} onAction={handleAction} />

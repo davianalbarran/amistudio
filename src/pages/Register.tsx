@@ -43,6 +43,10 @@ const Registration: React.FC = () => {
         setIsSubmitting(false);
     };
 
+    const handleBack = () => {
+        navigate('/');
+    }
+
     return (
         <>
             <Banner />
@@ -54,6 +58,7 @@ const Registration: React.FC = () => {
             <Button type="submit" buttonText="Register" disabled={isSubmitting} />
             </form>
             {error && <Error text={error} />}
+            <Button onClick={handleBack} buttonText="Back" />
         </>
     );
 };

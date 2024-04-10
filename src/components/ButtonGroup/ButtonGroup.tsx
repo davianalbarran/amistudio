@@ -18,9 +18,9 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({ onShowdowns, onSettings, onAc
       <button onClick={onSettings}>Settings</button>
       <select onChange={handleActionChange}>
         <option value="">Select an action</option>
-        <option value="action1">Action 1</option>
-        <option value="action2">Action 2</option>
-        <option value="action3">Action 3</option>
+        <option value="Go to gym">Go to gym</option>
+        <option value="Read book">Read a book</option>
+        <option value="Go for a run">Go for a run</option>
       </select>
     </div>
   );
