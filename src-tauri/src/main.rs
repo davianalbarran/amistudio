@@ -58,6 +58,19 @@ struct UserResult {
     username: String,
 }
 
+#[derive(Debug, Serialize)]
+struct MatchInvitation {
+    match_id: i32,
+    challenger_1: i32,
+    match_type: String,
+}
+
+#[derive(Debug, Serialize)]
+struct UserStatus {
+    user_id: i32,
+    status: Option<String>,
+}
+
 #[tauri::command]
 async fn validate_login(username: &str, password: &str) -> Result<LoginResponse, DBError> {
     dotenv().ok();
@@ -72,8 +85,6 @@ async fn validate_login(username: &str, password: &str) -> Result<LoginResponse,
     )
     .fetch_optional(&pool)
     .await?;
-
-    println!("{:#?}", result);
 
     let user_id = result.map(|record| record.user_id);
 
@@ -414,6 +425,94 @@ async fn create_match(
     Ok(())
 }
 
+#[tauri::command]
+async fn get_match_invitations(user_id: i32) -> Result<Vec<MatchInvitation>, DBError> {
+    dotenv().ok();
+    let database_url = env::var("DATABASE_URL").ok().unwrap();
+    let pool = MySqlPool::connect(&database_url).await?;
+
+    let invitations = sqlx::query_as!(
+        MatchInvitation,
+        r#"
+        SELECT match_id, challenger_1, match_type
+        FROM Matches
+        WHERE challenger_2 = ? AND match_status = 'INVITED'
+        "#,
+        user_id
+    )
+    .fetch_all(&pool)
+    .await?;
+
+    Ok(invitations)
+}
+
+#[tauri::command]
+async fn get_sent_match_invitations(user_id: i32) -> Result<Vec<MatchInvitation>, DBError> {
+    dotenv().ok();
+    let database_url = env::var("DATABASE_URL").ok().unwrap();
+    let pool = MySqlPool::connect(&database_url).await?;
+
+    let invitations = sqlx::query_as!(
+        MatchInvitation,
+        r#"
+        SELECT match_id, challenger_2 AS challenger_1, match_type
+        FROM Matches
+        WHERE challenger_1 = ? AND match_status = 'INVITED'
+        "#,
+        user_id
+    )
+    .fetch_all(&pool)
+    .await?;
+
+    Ok(invitations)
+}
+
+#[tauri::command]
+async fn update_match_status(match_id: i32, status: &str) -> Result<(), DBError> {
+    dotenv().ok();
+    let database_url = env::var("DATABASE_URL").ok().unwrap();
+    let pool = MySqlPool::connect(&database_url).await?;
+
+    let allowed_statuses = ["ACCEPTED", "REJECTED"];
+
+    if !allowed_statuses.contains(&status) {
+        return Err(DBError {
+            err: "Invalid match status".to_string(),
+        });
+    }
+
+    sqlx::query!(
+        "UPDATE Matches SET match_status = ? WHERE match_id = ?",
+        status,
+        match_id
+    )
+    .execute(&pool)
+    .await?;
+
+    Ok(())
+}
+
+#[tauri::command]
+async fn get_user_status(user_id: i32) -> Result<UserStatus, DBError> {
+    dotenv().ok();
+    let database_url = env::var("DATABASE_URL").ok().unwrap();
+    let pool = MySqlPool::connect(&database_url).await?;
+
+    let result = sqlx::query_as!(
+        UserStatus,
+        r#"
+        SELECT user_id, status
+        FROM Users
+        WHERE user_id = ?
+        "#,
+        user_id
+    )
+    .fetch_one(&pool)
+    .await?;
+
+    Ok(result)
+}
+
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -430,7 +529,11 @@ fn main() {
             get_friends,
             search_users,
             get_invitations,
-            create_match
+            create_match,
+            get_match_invitations,
+            get_sent_match_invitations,
+            update_match_status,
+            get_user_status
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
