@@ -7,19 +7,6 @@ use reqwest::Client;
 use serde::Serialize;
 use std::env;
 
-#[derive(Debug, Serialize)]
-struct DBError {
-    err: String,
-}
-
-impl From<sqlx::Error> for DBError {
-    fn from(value: sqlx::Error) -> Self {
-        Self {
-            err: format!("{}", value),
-        }
-    }
-}
-
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Serialize)]
