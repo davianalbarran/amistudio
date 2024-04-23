@@ -129,6 +129,9 @@ const Showdowns: React.FC = () => {
             (invitation) => invitation.match_id !== matchId,
           ),
         );
+        navigate("/MatchSimulation", {
+          state: { matchId, userId: location.state?.userId },
+        }); // Navigate to MatchSimulation page
       } else {
         alert(
           "The user who sent the invite is no longer online. The match cannot be accepted.",
